@@ -17,6 +17,7 @@ async function run() {
 
   console.log("Hamza Singular Test")
   doPrediction(model, data, 1)
+  get1Prediction(model, data)
 
 }
 
@@ -104,18 +105,41 @@ function doPrediction(model, data, testDataSize = 500) {
   const IMAGE_HEIGHT = 28;
 
   const testData = data.nextTestBatch(testDataSize);
+  console.log('Original')
+  console.log(testData.xs)
+  testData.xs.print()
 
   const testxs = testData.xs.reshape([testDataSize, IMAGE_WIDTH, IMAGE_HEIGHT, 1]);
-  testxs.print()
 
   const labels = testData.labels.argMax([-1]);
-  console.log("Labels: ", labels)
 
   const preds = model.predict(testxs).argMax([-1]);
-  console.log("Predictions: ", preds)
 
   testxs.dispose();
   return [preds, labels];
+}
+
+function get1Prediction(model, data) {
+  console.log("Custom Prediction")
+  const IMAGE_WIDTH = 28;
+  const IMAGE_HEIGHT = 28;
+
+  let numArr = Array(28).fill(0).map(elem => Array(28).fill(0))
+  for(let i = 2; i < 26; i++){
+      for(let j = 12; j < 16; j++){
+          numArr[i][j] = 1
+      }
+  }
+  let numArr1d = numArr.flat()
+  const testxsflat = tf.tensor2d([numArr1d])
+
+  const testxs = testxsflat.reshape([1, IMAGE_WIDTH, IMAGE_HEIGHT, 1]);
+
+  const preds = model.predict(testxs).argMax([-1]);
+  preds.print()
+
+  testxs.dispose();
+  // return [preds, labels];
 }
 
 async function showAccuracy(model, data) {
