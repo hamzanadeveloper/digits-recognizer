@@ -13,7 +13,7 @@ async function run() {
   await train(model, data);
   console.log("Model Trained")
 
-//   await showAccuracy(model, data);
+//   await showAccuracy(model, data); yo
 
   console.log("Hamza Singular Test")
   doPrediction(model, data, 1)
