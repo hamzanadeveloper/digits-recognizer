@@ -75,6 +75,11 @@ function App() {
     setMY(e.pageY - rect.top)
   }
 
+  const clearCanvas = () => {
+    const rect = can.getBoundingClientRect()
+    ctx.clearRect(0, 0, rect.right, rect.bottom);
+  }
+
   return (
     <div
       style={{
@@ -112,7 +117,8 @@ function App() {
           <canvas id="canvas2" width="28" height="28" style={{ border: "1px solid black", visibility: 'hidden'}} />
         </div>
         <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '224px'}}>
-          <Button variant="contained" style={{color: '#263238'}}>Clear</Button>
+          <Button variant="contained" style={{color: '#263238'}}
+          onClick = {clearCanvas}>Clear</Button>
           <Button variant="contained" style={{color: '#263238'}}>Submit</Button>
         </div>
       </div>
