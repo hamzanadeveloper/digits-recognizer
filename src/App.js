@@ -40,7 +40,7 @@ function App() {
       ctx.strokeStyle = '#cfd8dc'
       ctx.lineCap = 'round'
       ctx2.lineCap = 'round'
-      ctx2.lineWidth = 2
+      ctx2.lineWidth = 1
     }
   }, [ctx, ctx2])
 
@@ -87,7 +87,7 @@ function App() {
     const rect = can.getBoundingClientRect()
     const rect2 = can2.getBoundingClientRect()
     ctx.clearRect(0, 0, rect.right, rect.bottom)
-    ctx2.clearRect(0, 0, rect.right, rect.bottom)
+    ctx2.clearRect(0, 0, rect2.right, rect2.bottom)
   }
 
   const getPrediction = (model, canvasArr) => {
@@ -125,6 +125,7 @@ function App() {
           testPixels.push(0)
         }
     }
+    console.log(convToArr(testPixels))
     const num = getPrediction(model, testPixels)
     setPrediction(num[0])
   }
