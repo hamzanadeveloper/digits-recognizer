@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import * as tf from '@tensorflow/tfjs'
+import Button from '@material-ui/core/Button'
 
 function App() {
   const { host, protocol } = window.location;
@@ -32,6 +33,7 @@ function App() {
   useEffect(() => {
     if(ctx !== null){
       ctx.lineWidth = 8;
+      ctx.strokeStyle = '#cfd8dc'
       ctx2.lineWidth = 1;
     }
   }, [ctx, ctx2])
@@ -68,22 +70,55 @@ function App() {
   }
 
   const getMouse = (e) => {
-    setMX(e.pageX)
-    setMY(e.pageY)
+    const rect = can.getBoundingClientRect()
+    setMX(e.pageX - rect.left)
+    setMY(e.pageY - rect.top)
   }
 
   return (
-    <div>
-      <canvas
-        id="canvas1"
-        width="224"
-        height="224"
-        style={{ border: "1px solid black"}}
-        onMouseDown={down}
-        onMouseUp={up}
-        onMouseMove={move}
-      />
-      <canvas id="canvas2" width="28" height="28" style={{ border: "1px solid black"}} />
+    <div
+      style={{
+        backgroundColor: '#263238',
+        width: '100%',
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        alignItems: 'center'
+      }}>
+      <div
+        style={{
+          color: '#cfd8dc',
+          fontFamily: 'Montserrat',
+          fontSize: '40px',
+          fontWeight: 100
+        }}>
+        MNIST DIGIT PREDICTOR
+      </div>
+      <div style={{display: 'flex', flexDirection: 'column'}}>
+        <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+          <canvas
+            id="canvas1"
+            width="224"
+            height="224"
+            style={{
+              border: "2px solid #cfd8dc",
+              borderRadius: '5px'
+            }}
+            onMouseDown={down}
+            onMouseUp={up}
+            onMouseMove={move}
+          />
+          <canvas id="canvas2" width="28" height="28" style={{ border: "1px solid black", visibility: 'hidden'}} />
+        </div>
+        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '224px'}}>
+          <Button variant="contained" style={{color: '#263238'}}>Clear</Button>
+          <Button variant="contained" style={{color: '#263238'}}>Submit</Button>
+        </div>
+      </div>
+      <div style={{color: '#cfd8dc', fontFamily: 'Roboto'}}>
+        We'll add a description here.
+      </div>
     </div>
   );
 }
