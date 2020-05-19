@@ -1,4 +1,5 @@
 import { MnistData } from './data.js';
+import {canvasPixels} from './canvas.js'
 
 async function run() {
     console.log("Loading Data")
@@ -17,7 +18,7 @@ async function run() {
 
   console.log("Hamza Singular Test")
   doPrediction(model, data, 1)
-  get1Prediction(model, data)
+  get1Prediction(model, canvasPixels)
 
 }
 
@@ -119,20 +120,13 @@ function doPrediction(model, data, testDataSize = 500) {
   return [preds, labels];
 }
 
-function get1Prediction(model, data) {
+function get1Prediction(model, canvasArr) {
   console.log("Custom Prediction")
-  const IMAGE_WIDTH = 28;
   const IMAGE_HEIGHT = 28;
+  const IMAGE_WIDTH = 28;
 
-  let numArr = Array(28).fill(0).map(elem => Array(28).fill(0))
-  for(let i = 2; i < 26; i++){
-      for(let j = 12; j < 16; j++){
-          numArr[i][j] = 1
-      }
-  }
-  let numArr1d = numArr.flat()
-  const testxsflat = tf.tensor2d([numArr1d])
-
+  
+  const testxsflat = tf.tensor2d([canvasArr])
   const testxs = testxsflat.reshape([1, IMAGE_WIDTH, IMAGE_HEIGHT, 1]);
 
   const preds = model.predict(testxs).argMax([-1]);

@@ -48,7 +48,7 @@ function getMouse(e) {
 }
 
 //28x28 = 784 pixels stacked by rows 
-const testPixels = getPixels = () => {
+function getPixels() {
     const pixelData = ctx2.getImageData(0, 0, 28, 28).data;
     let testPixels = [];
     for (let i = 3; i < pixelData.length; i+=4) {
@@ -62,7 +62,7 @@ const testPixels = getPixels = () => {
 }
 
 //28 by 28 to test if testPixels() works 
-convToArr = (arr) => {
+function convToArr(arr) {
   let numArr = Array(28).fill(0).map(elem => Array(28).fill(0))
   for(let i = 0; i < 28; i++){
       for(let j = 0; j < 28; j++){
@@ -71,4 +71,12 @@ convToArr = (arr) => {
   }
   return numArr
 }
+
+
+const testPixels = getPixels();
+
+export const canvasPixels = testPixels;
+
+
+
 
