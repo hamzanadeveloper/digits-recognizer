@@ -16,12 +16,18 @@ function App() {
 
   const [model, setModel] = useState(null)
 
+  const [numDisplay, setNumDisplay] = useState({
+    showNum: false,
+    numVal: null
+  })
+
   useEffect(async () => {
     setCan(document.getElementById('canvas1'))
     setCan2(document.getElementById('canvas2'))
 
     setModel(await tf.loadLayersModel(`${protocol}//${host}/mnist-model/mnist-model.json`))
-  }, [])
+  }, []) 
+
 
   useEffect(() => {
     if(can !== null){
@@ -77,7 +83,59 @@ function App() {
 
   const clearCanvas = () => {
     const rect = can.getBoundingClientRect()
+    const rect2 = can2.getBoundingClientRect();
     ctx.clearRect(0, 0, rect.right, rect.bottom);
+    ctx2.clearRect(0, 0, rect.right, rect.bottom)
+  }
+
+  const get1Prediction = (model, canvasArr) => {
+    
+    const IMAGE_HEIGHT = 28;
+    const IMAGE_WIDTH = 28;
+  
+    const testxsflat = tf.tensor2d([canvasArr])
+    const testxs = testxsflat.reshape([1, IMAGE_WIDTH, IMAGE_HEIGHT, 1]);
+  
+    const preds = model.predict(testxs).argMax([-1]);
+    testxs.dispose();
+    preds.print()
+
+    return preds[0]
+    // return [preds, labels];
+  }
+
+  // ============================
+  // TROUBLESHOOTING FUNC
+
+  const convToArr = (arr) => {
+    let numArr = Array(28).fill(0).map(elem => Array(28).fill(0))
+    for(let i = 0; i < 28; i++){
+        for(let j = 0; j < 28; j++){
+            numArr[i][j] = arr[i*28+j]
+        }
+    }
+    return numArr
+  }
+
+  // ===========================
+
+  const submitNum = () => {
+    
+    const pixelData = ctx2.getImageData(0, 0, 28, 28).data;
+    let testPixels = [];
+    for (let i = 3; i < pixelData.length; i+=4) {
+        if (pixelData[i] > 0) {
+            testPixels.push(1);
+        } else {
+          testPixels.push(0)
+        }
+    }
+    //const numArr = convToArr(testPixels)
+    //console.log(numArr)
+
+    const num = get1Prediction(model, testPixels)
+    //setNumDisplay(num) NEED TO FIX
+    //console.log(numDisplay)
   }
 
   return (
@@ -119,7 +177,8 @@ function App() {
         <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '224px'}}>
           <Button variant="contained" style={{color: '#263238'}}
           onClick = {clearCanvas}>Clear</Button>
-          <Button variant="contained" style={{color: '#263238'}}>Submit</Button>
+          <Button variant="contained" style={{color: '#263238'}}
+          onClick={submitNum}>Submit</Button>
         </div>
       </div>
       <div style={{color: '#cfd8dc', fontFamily: 'Roboto'}}>
