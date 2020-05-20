@@ -57,8 +57,8 @@ function App() {
   const move = (e) => {
     getMouse(e)
     if (isPressed) {
-      ctx.lineTo(MX, MY)
-      ctx2.lineTo(MX/8, MY/8)
+      ctx.lineTo(MX + 0.5, MY + 0.5)
+      ctx2.lineTo(MX/8 + 0.5, MY/8 + 0.5)
       ctx.stroke()
       ctx2.stroke()
     }
@@ -73,8 +73,8 @@ function App() {
     getMouse(e)
     ctx.beginPath()
     ctx2.beginPath()
-    ctx.moveTo(MX, MY)
-    ctx2.moveTo(MX/8, MY/8)
+    ctx.moveTo(MX + 0.5, MY + 0.5)
+    ctx2.moveTo(MX/8 + 0.5, MY/8 + 0.5)
     setIsPressed(true)
   }
 
