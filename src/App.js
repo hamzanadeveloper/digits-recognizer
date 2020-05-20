@@ -242,8 +242,8 @@ function App() {
                 padding: 20,
                 fontSize: '24px'
               }}>
-              {prediction ? 'PREDICTION: ' : null }
-              <span style={{fontWeight: 700, paddingLeft: '10px'}}>{prediction ? prediction : null }</span>
+              {prediction !== null ? 'PREDICTION: ' : null }
+              <span style={{fontWeight: 700, paddingLeft: '10px'}}>{prediction !== null ? prediction : null }</span>
             </div>
             <div style={{color: '#cfd8dc', fontFamily: 'Roboto', maxWidth: '600px', textAlign: 'center'}}>
               The model is a Convolutional Neural Network (CNN) built in TensorFlowJS. The model consists of
