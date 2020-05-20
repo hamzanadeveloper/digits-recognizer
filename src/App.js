@@ -48,9 +48,7 @@ function App() {
 
   useEffect(() => {
     if(model !== null){
-      console.log("Model has been loaded")
       setIsLoading(false)
-      model.summary()
     }
   }, [model])
 
@@ -127,7 +125,6 @@ function App() {
           testPixels.push(0)
         }
     }
-    console.log(convToArr(testPixels))
     const num = getPrediction(model, testPixels)
     setPrediction(num[0])
   }
