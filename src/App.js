@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import * as tf from '@tensorflow/tfjs'
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import './App.css'
+import Particles from "react-particles-js";
 
 function App() {
   const { host, protocol } = window.location
@@ -133,79 +135,122 @@ function App() {
   return (
     <div
       style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
         backgroundColor: '#263238',
-        width: '100%',
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-around',
-        alignItems: 'center'
-      }}>
+      }}
+    >
       <div
         style={{
-          color: '#cfd8dc',
-          fontFamily: 'Montserrat',
-          fontSize: '40px',
-          fontWeight: 100
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100vh"
+        }}
+      >
+        <Particles
+          className="particle-canvas"
+          params={{
+            particles: {
+              number: {
+                value: 100,
+                density: {
+                  enable: true,
+                  value_area: 1803.4120608655228
+                }
+              }
+            }
+          }}/>
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: 'transparent'
         }}>
-        MNIST DIGIT PREDICTOR
-      </div>
-      <div style={{display: 'flex', flexDirection: 'column'}}>
-        <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-          { isLoading ?
-            <CircularProgress/>
-            :
-            null
-          }
-          <canvas
-            id="canvas1"
-            width="224"
-            height="224"
-            style={{
-              border: "2px solid #cfd8dc",
-              borderRadius: '5px',
-              display: isLoading ? 'none' : 'block'
-            }}
-            onMouseDown={down}
-            onMouseUp={up}
-            onMouseMove={move}
-          />
-          <canvas
-            id="canvas2"
-            width="28"
-            height="28"
-            style={{ border: "1px solid black", visibility: 'hidden', display: isLoading ? 'none' : 'block'}}
-          />
-        </div>
-        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '224px'}}>
-          <Button variant="contained" style={{color: '#263238'}}
-          onClick={clearCanvas}>Clear</Button>
-          <Button variant="contained" style={{color: '#263238'}}
-          onClick={submitNum}>Submit</Button>
-        </div>
-      </div>
-      <div style={{display: 'flex', flexDirection: 'column'}}>
         <div
           style={{
-            color: '#cfd8dc',
-            fontFamily: 'Montserrat',
-            maxWidth: '600px',
-            textAlign: 'center',
-            padding: 20,
-            fontSize: '24px'
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            backgroundColor: 'transparent'
           }}>
-          {prediction ?
-            <div>
-              PREDICTION:
-              <span style={{fontWeight: 700, paddingLeft: '10px'}}>{prediction}</span>
+          <div
+            style={{
+              color: '#cfd8dc',
+              fontFamily: 'Montserrat',
+              fontSize: '40px',
+              fontWeight: 100,
+              padding: '10px 25px',
+              background: '#263238',
+              border: '1px solid #cfd8dc'
+            }}>
+            MNIST DIGIT PREDICTOR
+          </div>
+          <div style={{display: 'flex', flexDirection: 'column'}}>
+            <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+              { isLoading ?
+                <CircularProgress/>
+                :
+                null
+              }
+              <canvas
+                id="canvas1"
+                width="224"
+                height="224"
+                style={{
+                  border: "2px solid #cfd8dc",
+                  background: '#263238',
+                  borderRadius: '5px',
+                  display: isLoading ? 'none' : 'block'
+                }}
+                onMouseDown={down}
+                onMouseUp={up}
+                onMouseMove={move}
+              />
+              <canvas
+                id="canvas2"
+                width="28"
+                height="28"
+                style={{ border: "1px solid black", visibility: 'hidden', display: isLoading ? 'none' : 'block'}}
+              />
             </div>
-            : null
-          }
-        </div>
-        <div style={{color: '#cfd8dc', fontFamily: 'Roboto', maxWidth: '600px', textAlign: 'center'}}>
-          The model is a Convolutional Neural Network (CNN) built in TensorFlowJS. The model consists of
-          6 layers: 2 convolutional layers, 2 downsampling layers (via max pooling), a flattening layer, and a
-          dense layer for digit prediction. The total model consists of 5994 trainable parameters.
+            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '224px'}}>
+              <Button variant="contained" style={{color: '#263238'}}
+                      onClick={clearCanvas}>Clear</Button>
+              <Button variant="contained" style={{color: '#263238'}}
+                      onClick={submitNum}>Submit</Button>
+            </div>
+          </div>
+          <div style={{display: 'flex', flexDirection: 'column'}}>
+            <div
+              style={{
+                color: '#cfd8dc',
+                fontFamily: 'Montserrat',
+                maxWidth: '600px',
+                textAlign: 'center',
+                padding: 20,
+                fontSize: '24px'
+              }}>
+              {prediction ? 'PREDICTION: ' : null }
+              <span style={{fontWeight: 700, paddingLeft: '10px'}}>{prediction ? prediction : null }</span>
+            </div>
+            <div style={{color: '#cfd8dc', fontFamily: 'Roboto', maxWidth: '600px', textAlign: 'center'}}>
+              The model is a Convolutional Neural Network (CNN) built in TensorFlowJS. The model consists of
+              6 layers: 2 convolutional layers, 2 downsampling layers (via max pooling), a flattening layer, and a
+              dense layer for digit prediction. The total model consists of 5994 trainable parameters.
+            </div>
+          </div>
         </div>
       </div>
     </div>
