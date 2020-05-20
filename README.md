@@ -18,3 +18,7 @@ To build, first:
 - Clone and open this repository,
 - Run `npm install`,
 - Run `npm start`.
+
+## Issues
+Certain issues have arised from converting the canvas (224x224) drawing into the 28x28 image that is fed to the model. Due to the normalization in size, some resolution is lost, which effects the performance of the model.
+
