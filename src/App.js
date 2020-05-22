@@ -7,44 +7,19 @@ import Particles from "react-particles-js";
 
 function App() {
   const { host, protocol } = window.location
-  const [isPressed, setIsPressed] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [MX, setMX] = useState(4)
-  const [MY, setMY] = useState(4)
-
-  const [can, setCan] = useState(null)
-  const [can2, setCan2] = useState(null)
-
-  const [ctx, setCTX] = useState(null)
-  const [ctx2, setCTX2] = useState(null)
+  const [mouseDown, setMouseDown] = useState(false)
+  const [arr, setArr] = useState(Array(784).fill(0))
 
   const [model, setModel] = useState(null)
   const [prediction, setPrediction] = useState(null)
 
   useEffect(async () => {
-    setCan(document.getElementById('canvas1'))
-    setCan2(document.getElementById('canvas2'))
+    window.addEventListener('mousedown', e => setMouseDown(true))
+    window.addEventListener('mouseup', e => setMouseDown(false))
 
     setModel(await tf.loadLayersModel(`${protocol}//${host}/mnist-model/mnist-model.json`))
   }, [])
-
-
-  useEffect(() => {
-    if(can !== null){
-      setCTX(can.getContext('2d'))
-      setCTX2(can2.getContext('2d'))
-    }
-  }, [can, can2])
-
-  useEffect(() => {
-    if(ctx !== null){
-      ctx.lineWidth = 8
-      ctx.strokeStyle = '#cfd8dc'
-      ctx.lineCap = 'round'
-      ctx2.lineCap = 'round'
-      ctx2.lineWidth = 1
-    }
-  }, [ctx, ctx2])
 
   useEffect(() => {
     if(model !== null){
@@ -52,50 +27,16 @@ function App() {
     }
   }, [model])
 
-  const move = (e) => {
-    getMouse(e)
-    if (isPressed) {
-      ctx.lineTo(MX + 0.5, MY + 0.5)
-      ctx2.lineTo(MX/8 + 0.5, MY/8 + 0.5)
-      ctx.stroke()
-      ctx2.stroke()
-    }
-  }
-
-  const up = (e) => {
-    getMouse(e)
-    setIsPressed(false)
-  }
-
-  const down = (e) => {
-    getMouse(e)
-    ctx.beginPath()
-    ctx2.beginPath()
-    ctx.moveTo(MX + 0.5, MY + 0.5)
-    ctx2.moveTo(MX/8 + 0.5, MY/8 + 0.5)
-    setIsPressed(true)
-  }
-
-  const getMouse = (e) => {
-    const rect = can.getBoundingClientRect()
-    setMX(e.pageX - rect.left)
-    setMY(e.pageY - rect.top)
-  }
-
   const clearCanvas = () => {
+    setArr(Array(784).fill(0))
     setPrediction(null)
-    const rect = can.getBoundingClientRect()
-    const rect2 = can2.getBoundingClientRect()
-    ctx.clearRect(0, 0, rect.right, rect.bottom)
-    ctx2.clearRect(0, 0, rect2.right, rect2.bottom)
   }
 
-  const getPrediction = (model, canvasArr) => {
-
+  const getPrediction = () => {
     const IMAGE_HEIGHT = 28
     const IMAGE_WIDTH = 28
 
-    const testxsflat = tf.tensor2d([canvasArr])
+    const testxsflat = tf.tensor2d([arr])
     const testxs = testxsflat.reshape([1, IMAGE_WIDTH, IMAGE_HEIGHT, 1])
 
     const preds = model.predict(testxs).argMax([-1])
@@ -105,27 +46,16 @@ function App() {
     return preds.dataSync()
   }
 
-  const convToArr = (arr) => {
-    let numArr = Array(28).fill(0).map(elem => Array(28).fill(0))
-    for(let i = 0; i < 28; i++){
-        for(let j = 0; j < 28; j++){
-            numArr[i][j] = arr[i*28+j]
-        }
+  const handleOver = (event) => {
+    if(mouseDown) {
+      let newArr = [...arr]
+      newArr[event.target.id] = 1
+      setArr(newArr)
     }
-    return numArr
   }
 
   const submitNum = () => {
-    const pixelData = ctx2.getImageData(0, 0, 28, 28).data
-    let testPixels = []
-    for (let i = 3; i < pixelData.length; i+=4) {
-        if (pixelData[i] > 0) {
-            testPixels.push(pixelData[i]/255)
-        } else {
-          testPixels.push(0)
-        }
-    }
-    const num = getPrediction(model, testPixels)
+    const num = getPrediction()
     setPrediction(num[0])
   }
 
@@ -201,28 +131,36 @@ function App() {
                 :
                 null
               }
-              <canvas
-                id="canvas1"
-                width="224"
-                height="224"
+              <div
                 style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  backgroundColor: '#263238',
                   border: "2px solid #cfd8dc",
-                  background: '#263238',
                   borderRadius: '5px',
-                  display: isLoading ? 'none' : 'block'
-                }}
-                onMouseDown={down}
-                onMouseUp={up}
-                onMouseMove={move}
-              />
-              <canvas
-                id="canvas2"
-                width="28"
-                height="28"
-                style={{ border: "1px solid black", visibility: 'hidden', display: isLoading ? 'none' : 'block'}}
-              />
+                }}>
+                {[...Array(28)].map((val, i) => {
+                  return (
+                    <div style={{display: 'flex', flexDirection: 'row'}}>
+                      {[...Array(28)].map((nval, j) => {
+                        const key = i * 28 + j
+
+                        return <div
+                          id={key}
+                          onMouseEnter={event => handleOver(event)}
+                          style={{
+                            width: 10,
+                            height: 10,
+                            backgroundColor: arr[key] === 1 ? '#fff' : 'inherit'
+                          }}
+                        />
+                      })}
+                    </div>
+                  )
+                })}
+              </div>
             </div>
-            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '224px'}}>
+            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '284px', padding: '10px'}}>
               <Button variant="contained" style={{color: '#263238'}}
                       onClick={clearCanvas}>Clear</Button>
               <Button variant="contained" style={{color: '#263238'}}
