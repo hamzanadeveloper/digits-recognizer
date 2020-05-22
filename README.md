@@ -3,6 +3,9 @@ This repository tackles the MNIST digit classification problem using modern tech
 MaterialUI, it pairs contemporary web development with machine learning by running a Convolutional Neural Network (CNN)
 in browser (TensorflowJS). 
 
+## Demo
+<img src="https://github.com/hamzanadeveloper/digits-recognizer/blob/master/mnist-digit.gif?raw=true" height="500" />
+
 ## CNN Model Topology
 The CNN is composed of 6 layers: two convolution layers, two down-sampling layers (via max pooling), a flattening layer,
 and a dense layer for digit classification. The entire model itself consists of 5994 trainable parameters. Further 
